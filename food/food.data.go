@@ -10,7 +10,7 @@ import (
 
 var foods []Food
 
-func GetRandomFood() (string, error) {
+func getRandomFood() (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -32,4 +32,15 @@ func GetRandomFood() (string, error) {
 	}
 
 	return foods[rand.Intn(len(foods))].Name, nil
+}
+
+func storeNewFood(data Food) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err := database.DbConn.ExecContext(ctx, `INSERT INTO iran(name) VALUES(?)`, data.Name)
+	if err != nil {
+		return err
+	}
+	return nil
 }
