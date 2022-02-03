@@ -6,17 +6,18 @@ import (
 	"net/http"
 
 	"github.com/ahmadabd/FoodRecommended.git/database"
-	"github.com/ahmadabd/FoodRecommended.git/food"
+	"github.com/ahmadabd/FoodRecommended.git/routes"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var baseRoute = "/api"
+func init() {
+	database.SetupDatabase()
+}
 
 func main() {
-	fmt.Println("Program is starting ...")
+	fmt.Println("Application starting ...")
 
-	database.SetupDatabase()
-	food.SetupRoute(baseRoute)
+	routes.SetpuRoutes()
 
 	log.Fatal(http.ListenAndServe(":5000", nil))
 }
