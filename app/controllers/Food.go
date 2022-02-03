@@ -9,7 +9,7 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/app/structs"
 )
 
-var pathUrl = "food"
+const pathUrl = "food"
 
 func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {

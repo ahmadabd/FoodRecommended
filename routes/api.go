@@ -2,7 +2,7 @@ package routes
 
 import "github.com/ahmadabd/FoodRecommended.git/app/controllers"
 
-var baseUrl = "api"
+const baseUrl = "api"
 
 func SetpuRoutes() {
 	controllers.SetupFoodsRoutes(baseUrl)
