@@ -27,3 +27,10 @@ func GetRandomFood() (structs.Foods, error) {
 
 	return food, nil
 }
+
+func CreateFood(food structs.Foods) error {
+	ctx, cance := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cance()
+	_, err := database.DbConn.ExecContext(ctx, `INSERT INTO foods (name, city, country) VALUES (?, ?, ?)`, food.Name, food.City, food.Country)
+	return err
+}
