@@ -4,21 +4,26 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/ahmadabd/FoodRecommended.git/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 )
 
 var DbConn *sql.DB
 
-func SetupDatabase() {
+func SetupDatabase(cfg *configs.Config) {
 
 	var err error
-	DbConn, err = sql.Open("mysql", fmt.Sprintf("%v:%v@tcp(%v:%v)/%v",
-		configs.Conf.GetDatabaseUser(),
-		configs.Conf.GetDatabasePassword(),
-		configs.Conf.GetDatabaseHost(),
-		configs.Conf.GetDatabasePort(),
-		configs.Conf.GetDatabaseName()))
+	DbConn, err = sql.Open("mysql", databaseConfig(cfg))
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func databaseConfig(cfg configs.ConfigImp) string {
+	return fmt.Sprintf("%v:%v@tcp(%v:%v)/%v",
+		cfg.GetDatabaseUser(),
+		cfg.GetDatabasePassword(),
+		cfg.GetDatabaseHost(),
+		cfg.GetDatabasePort(),
+		cfg.GetDatabaseName(),
+	)
 }

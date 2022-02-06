@@ -5,15 +5,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ahmadabd/FoodRecommended.git/configs"
 	"github.com/ahmadabd/FoodRecommended.git/database"
+	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"github.com/ahmadabd/FoodRecommended.git/routes"
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var cfg *configs.Config
+
 func init() {
-	configs.GetConfig()
-	database.SetupDatabase()
+	cfg = configs.GetConfig()
+	database.SetupDatabase(cfg)
 }
 
 func main() {
@@ -21,5 +23,9 @@ func main() {
 
 	routes.SetpuRoutes()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%v:%v", configs.Conf.GetServerHost(), configs.Conf.GetServerPort()), nil))
+	log.Fatal(http.ListenAndServe(serverConfigs(cfg), nil))
+}
+
+func serverConfigs(cfg configs.ConfigImp) string {
+	return fmt.Sprintf("%v:%v", cfg.GetServerHost(), cfg.GetServerPort())
 }
