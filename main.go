@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ahmadabd/FoodRecommended.git/database"
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
-	"github.com/ahmadabd/FoodRecommended.git/routes"
+	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
+	"github.com/ahmadabd/FoodRecommended.git/internal/routes"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -15,7 +15,7 @@ var cfg *configs.Config
 
 func init() {
 	cfg = configs.GetConfig()
-	database.SetupDatabase(cfg)
+	mysql.SetupDatabase(cfg)
 }
 
 func main() {
