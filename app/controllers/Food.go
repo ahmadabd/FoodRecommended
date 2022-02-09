@@ -8,10 +8,11 @@ import (
 	"time"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
-	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
+	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
 )
 
 const pathUrl = "food"
+var foodImp repository.DB
 
 func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -19,9 +20,8 @@ func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		var food model.Food
-		var err error
-		food, err = mysql.GetRandomFood(ctx)
+
+		foodRes, err := foodImp.GetRandomFood(ctx)
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -30,7 +30,7 @@ func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(food)
+		json.NewEncoder(w).Encode(foodRes)
 	}
 }
 
@@ -46,7 +46,7 @@ func foodHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		if err = mysql.CreateFood(ctx, food); err != nil {
+		if err = foodImp.CreateFood(ctx, food); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -62,7 +62,7 @@ func foodsHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		var foods []model.Food
 		var err error
-		foods, err = mysql.GetFoods(ctx)
+		foods, err = foodImp.GetFoods(ctx)
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -75,7 +75,8 @@ func foodsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SetupFoodsRoutes(baseUrl string) {
+func SetupFoodsRoutes(baseUrl string, dbConn repository.DB) {
+	foodImp = dbConn
 	http.HandleFunc(fmt.Sprintf("/%s/%s/random", baseUrl, pathUrl), randomFoodHandler)
 	http.HandleFunc(fmt.Sprintf("/%s/%s", baseUrl, pathUrl), foodHandler)
 	http.HandleFunc(fmt.Sprintf("/%s/%s/all", baseUrl, pathUrl), foodsHandler)

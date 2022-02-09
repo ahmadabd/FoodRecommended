@@ -5,17 +5,25 @@ import (
 	"fmt"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
 )
 
-var DbConn *sql.DB
+type mysql struct {
+	db *sql.DB
+}
 
-func SetupDatabase(cfg *configs.Config) {
+func SetupDatabase(cfg *configs.Config) (repository.DB, error) {
 
-	var err error
-	DbConn, err = sql.Open("mysql", databaseConfig(cfg))
+	db, err := sql.Open("mysql", databaseConfig(cfg))
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
+
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return &mysql{db: db}, nil
 }
 
 func databaseConfig(cfg configs.ConfigImp) string {

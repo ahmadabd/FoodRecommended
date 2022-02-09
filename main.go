@@ -15,13 +15,17 @@ var cfg *configs.Config
 
 func init() {
 	cfg = configs.GetConfig()
-	mysql.SetupDatabase(cfg)
 }
 
 func main() {
 	fmt.Println("Application starting ...")
 
-	routes.SetpuRoutes()
+	dbConn, err := mysql.SetupDatabase(cfg)
+	if err != nil {
+		log.Fatal("Error connecting to database: ", err)
+	}
+
+	routes.SetpuRoutes(dbConn)
 
 	log.Fatal(http.ListenAndServe(serverConfigs(cfg), nil))
 }
