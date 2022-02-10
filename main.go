@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+
 	"net/http"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
-	"github.com/ahmadabd/FoodRecommended.git/internal/routes"
+	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/echo"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -15,17 +17,17 @@ var cfg *configs.Config
 
 func init() {
 	cfg = configs.GetConfig()
-}
-
-func main() {
-	fmt.Println("Application starting ...")
-
 	dbConn, err := mysql.SetupDatabase(cfg)
 	if err != nil {
 		log.Fatal("Error connecting to database: ", err)
 	}
 
-	routes.SetpuRoutes(dbConn)
+	foodServ := food.New(dbConn)
+	echo.New(foodServ).Start()
+}
+
+func main() {
+	fmt.Println("Application started.")
 
 	log.Fatal(http.ListenAndServe(serverConfigs(cfg), nil))
 }

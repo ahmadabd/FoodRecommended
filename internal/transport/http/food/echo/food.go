@@ -1,4 +1,4 @@
-package controllers
+package echo
 
 import (
 	"context"
@@ -8,20 +8,22 @@ import (
 	"time"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
-	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
+	"github.com/ahmadabd/FoodRecommended.git/internal/service"
 )
 
-const pathUrl = "food"
-var foodImp repository.DB
+type handler struct {
+	food service.Food
+}
 
-func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
+func (handler *handler) randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	switch r.Method {
 	case http.MethodGet:
 
-		foodRes, err := foodImp.GetRandomFood(ctx)
+		foodRes, err := handler.food.RandomFood(ctx)
+
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -34,7 +36,7 @@ func randomFoodHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func foodHandler(w http.ResponseWriter, r *http.Request) {
+func (handler *handler) foodHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -46,7 +48,7 @@ func foodHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		if err = foodImp.CreateFood(ctx, food); err != nil {
+		if err = handler.food.StoreFood(ctx, food); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -54,7 +56,7 @@ func foodHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func foodsHandler(w http.ResponseWriter, r *http.Request) {
+func (handler *handler) foodsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -62,7 +64,7 @@ func foodsHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		var foods []model.Food
 		var err error
-		foods, err = foodImp.GetFoods(ctx)
+		foods, err = handler.food.GetFoods(ctx)
 		if err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -73,11 +75,4 @@ func foodsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(foods)
 	}
-}
-
-func SetupFoodsRoutes(baseUrl string, dbConn repository.DB) {
-	foodImp = dbConn
-	http.HandleFunc(fmt.Sprintf("/%s/%s/random", baseUrl, pathUrl), randomFoodHandler)
-	http.HandleFunc(fmt.Sprintf("/%s/%s", baseUrl, pathUrl), foodHandler)
-	http.HandleFunc(fmt.Sprintf("/%s/%s/all", baseUrl, pathUrl), foodsHandler)
 }
