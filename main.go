@@ -9,7 +9,7 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
-	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/echo"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/handler"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -23,7 +23,7 @@ func init() {
 	}
 
 	foodServ := food.New(dbConn)
-	echo.New(foodServ).Start()
+	handler.New(foodServ).Start()
 }
 
 func main() {

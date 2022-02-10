@@ -1,4 +1,4 @@
-package echo
+package handler
 
 import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
