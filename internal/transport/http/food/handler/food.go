@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/request"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/response"
 )
 
 type handler struct {
@@ -42,7 +43,7 @@ func (handler *handler) foodHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodPost:
-		var food model.Food
+		var food request.Food
 		err := json.NewDecoder(r.Body).Decode(&food)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -62,7 +63,7 @@ func (handler *handler) foodsHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		var foods []model.Food
+		var foods []response.Food
 		var err error
 		foods, err = handler.food.GetFoods(ctx)
 		if err != nil {

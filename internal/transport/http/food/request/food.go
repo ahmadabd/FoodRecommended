@@ -5,6 +5,6 @@ type (
 		Name       string `json:"name"`
 		City       string `json:"city"`
 		Country    string `json:"country"`
-		Vegetarian uint   `json:"vegetarian"`
+		Vegetarian string `json:"vegetarian"`
 	}
 )
