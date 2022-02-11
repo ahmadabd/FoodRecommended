@@ -1,9 +1,10 @@
-package configs
+package yaml
 
 import (
 	"io/ioutil"
 	"log"
 
+	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"gopkg.in/yaml.v2"
 )
 
@@ -27,7 +28,7 @@ type (
 	}
 )
 
-func GetConfig() *Config {
+func GetConfig() configs.ConfigImp {
 	c := &Config{}
 	yamlFile, err := ioutil.ReadFile("config.yml")
 	if err != nil {

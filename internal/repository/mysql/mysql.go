@@ -12,7 +12,7 @@ type mysql struct {
 	db *sql.DB
 }
 
-func SetupDatabase(cfg *configs.Config) (repository.DB, error) {
+func SetupDatabase(cfg configs.ConfigImp) (repository.DB, error) {
 
 	db, err := sql.Open("mysql", databaseConfig(cfg))
 	if err != nil {

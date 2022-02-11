@@ -7,16 +7,15 @@ import (
 	"net/http"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/configs/yaml"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/handler"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var cfg *configs.Config
-
-func init() {
-	cfg = configs.GetConfig()
+func main() {
+	cfg := yaml.GetConfig()
 	dbConn, err := mysql.SetupDatabase(cfg)
 	if err != nil {
 		log.Fatal("Error connecting to database: ", err)
@@ -24,9 +23,7 @@ func init() {
 
 	foodServ := food.New(dbConn)
 	handler.New(foodServ).Start()
-}
 
-func main() {
 	fmt.Println("Application started.")
 
 	log.Fatal(http.ListenAndServe(serverConfigs(cfg), nil))
