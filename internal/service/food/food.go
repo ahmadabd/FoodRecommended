@@ -25,16 +25,7 @@ func (food *fd) RandomFood(ctx context.Context) (response.Food, error) {
 	randFood, err := food.db.GetRandomFood(ctx)
 
 	if err == nil {
-		result.Id = randFood.Id
-		result.Name = randFood.Name
-		result.City = randFood.City
-		result.Country = randFood.Country
-
-		if randFood.Vegetarian == enum.Vegetarian {
-			result.Vegetarian = "vegetarian"
-		} else if randFood.Vegetarian == enum.NonVegetarian {
-			result.Vegetarian = "non-vegetarian"
-		}
+		result = castFoodToResponse(randFood)
 	}
 
 	return result, err
@@ -48,16 +39,7 @@ func (food *fd) GetFoods(ctx context.Context) ([]response.Food, error) {
 
 	if err == nil {
 		for _, f := range allFoods {
-			var tmp response.Food
-			tmp.Id = f.Id
-			tmp.Name = f.Name
-			tmp.City = f.City
-			tmp.Country = f.Country
-			if f.Vegetarian == enum.Vegetarian {
-				tmp.Vegetarian = "vegetarian"
-			} else if f.Vegetarian == enum.NonVegetarian {
-				tmp.Vegetarian = "non-vegetarian"
-			}
+			tmp := castFoodToResponse(f)
 			result = append(result, tmp)
 		}
 	}
@@ -66,16 +48,38 @@ func (food *fd) GetFoods(ctx context.Context) ([]response.Food, error) {
 }
 
 func (food *fd) StoreFood(ctx context.Context, newFd request.Food) error {
+
+	newFood := castRequestToFood(newFd)
+
+	return food.db.CreateFood(ctx, newFood)
+}
+
+func castFoodToResponse(food model.Food) response.Food {
+	var tmp response.Food
+	tmp.Id = food.Id
+	tmp.Name = food.Name
+	tmp.City = food.City
+	tmp.Country = food.Country
+	if food.Vegetarian == enum.Vegetarian {
+		tmp.Vegetarian = "vegetarian"
+	} else if food.Vegetarian == enum.NonVegetarian {
+		tmp.Vegetarian = "non-vegetarian"
+	}
+
+	return tmp
+}
+
+func castRequestToFood(food request.Food) model.Food {
 	var newFood model.Food
 
-	newFood.Name = newFd.Name
-	newFood.City = newFd.City
-	newFood.Country = newFd.Country
-	if newFd.Vegetarian == "vegetarian" {
+	newFood.Name = food.Name
+	newFood.City = food.City
+	newFood.Country = food.Country
+	if food.Vegetarian == "vegetarian" {
 		newFood.Vegetarian = enum.Vegetarian
-	} else if newFd.Vegetarian == "non-vegetarian" {
+	} else if food.Vegetarian == "non-vegetarian" {
 		newFood.Vegetarian = enum.NonVegetarian
 	}
 
-	return food.db.CreateFood(ctx, newFood)
+	return newFood
 }
