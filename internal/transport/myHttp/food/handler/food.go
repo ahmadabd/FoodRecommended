@@ -10,8 +10,8 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/enum"
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
-	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/request"
-	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/response"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/request"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/response"
 )
 
 type handler struct {
