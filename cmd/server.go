@@ -8,10 +8,12 @@ import (
 	"syscall"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs/yaml"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger/zap"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/handler"
 	"github.com/urfave/cli/v2"
+	"go.uber.org/zap/zapcore"
 )
 
 var ServeCMD = &cli.Command{
@@ -23,7 +25,15 @@ var ServeCMD = &cli.Command{
 
 func serve(c *cli.Context) error {
 	cfg := yaml.GetConfig()
-	dbConn, err := mysql.SetupDatabase(cfg)
+
+	f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+
+	logger := zap.New(f, zapcore.ErrorLevel)
+
+	dbConn, err := mysql.SetupDatabase(cfg, logger)
 	if err != nil {
 		log.Println("Error connecting to database: ", err)
 		return err
@@ -31,11 +41,11 @@ func serve(c *cli.Context) error {
 
 	fmt.Println("Application started.")
 
-	foodServ := food.New(dbConn)
+	foodServ := food.New(dbConn, logger)
 
 	go func() {
-		if err := handler.New(foodServ).Start(cfg); err != nil {
-			log.Fatal(err)
+		if err := handler.New(foodServ, logger).Start(cfg); err != nil {
+			logger.Error(fmt.Sprintf("error happen while serving: %v", err))
 		}
 	}()
 

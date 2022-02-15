@@ -9,13 +9,15 @@ import (
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/enum"
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/request"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/response"
 )
 
 type handler struct {
-	food service.Food
+	food   service.Food
+	logger logger.Logger
 }
 
 func (handler *handler) randomFoodHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +30,7 @@ func (handler *handler) randomFoodHandler(w http.ResponseWriter, r *http.Request
 		foodRes, err := handler.food.RandomFood(ctx)
 
 		if err != nil {
-			fmt.Println(err)
+			handler.logger.Error(fmt.Sprintf("error happen in getting random food: %v", err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -51,6 +53,7 @@ func (handler *handler) foodHandler(w http.ResponseWriter, r *http.Request) {
 		var newFood request.Food
 		err := json.NewDecoder(r.Body).Decode(&newFood)
 		if err != nil {
+			handler.logger.Info(fmt.Sprintf("error happen in add new food data from user: %v", err))
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -58,6 +61,7 @@ func (handler *handler) foodHandler(w http.ResponseWriter, r *http.Request) {
 		food := castRequestToFood(newFood)
 
 		if err = handler.food.StoreFood(ctx, food); err != nil {
+			handler.logger.Error(fmt.Sprintf("error happen in storing new food: %v", err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -75,7 +79,7 @@ func (handler *handler) foodsHandler(w http.ResponseWriter, r *http.Request) {
 		var err error
 		foods, err = handler.food.GetFoods(ctx)
 		if err != nil {
-			fmt.Println(err)
+			handler.logger.Error(fmt.Sprintf("error happen in getting all food: %v", err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

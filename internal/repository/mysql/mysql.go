@@ -5,17 +5,20 @@ import (
 	"fmt"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
 )
 
 type mysql struct {
-	db *sql.DB
+	db     *sql.DB
+	logger logger.Logger
 }
 
-func SetupDatabase(cfg configs.ConfigImp) (repository.DB, error) {
+func SetupDatabase(cfg configs.ConfigImp, logger logger.Logger) (repository.DB, error) {
 
 	db, err := sql.Open("mysql", databaseConfig(cfg))
 	if err != nil {
+		logger.Error(fmt.Sprintf("Error while connecting to database: %v", err))
 		return nil, err
 	}
 
@@ -23,7 +26,7 @@ func SetupDatabase(cfg configs.ConfigImp) (repository.DB, error) {
 		return nil, err
 	}
 
-	return &mysql{db: db}, nil
+	return &mysql{db: db, logger: logger}, nil
 }
 
 func databaseConfig(cfg configs.ConfigImp) string {

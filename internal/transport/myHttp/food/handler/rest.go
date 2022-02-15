@@ -5,19 +5,24 @@ import (
 	"net/http"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp"
 )
 
 type rest struct {
 	handler *handler
+	logger  logger.Logger
 }
 
-func New(foodSrv service.Food) myHttp.Rest {
+func New(foodSrv service.Food, logger logger.Logger) myHttp.Rest {
 	return &rest{
 		handler: &handler{
-			food: foodSrv,
-		}}
+			food:   foodSrv,
+			logger: logger,
+		},
+		logger: logger,
+	}
 }
 
 func (r *rest) Start(cfg configs.ConfigImp) error {
