@@ -36,7 +36,7 @@ func (db *mysql) CreateFood(ctx context.Context, food model.Food) error {
 	return err
 }
 
-func (db *mysql) GetFoods(ctx context.Context) ([]model.Food, error) {
+func (db *mysql) GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error) {
 	var foods []model.Food
 
 	rows, err := db.db.QueryContext(ctx, `SELECT 
@@ -45,7 +45,7 @@ func (db *mysql) GetFoods(ctx context.Context) ([]model.Food, error) {
 		city, 
 		country,
 		vegetarian
-		FROM foods`)
+		FROM foods LIMIT ?`, paginationLimit)
 	if err != nil {
 		return foods, err
 	}

@@ -8,6 +8,6 @@ import (
 
 type Food interface {
 	RandomFood(ctx context.Context) (model.Food, error)
-	GetFoods(ctx context.Context) ([]model.Food, error)
+	GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error)
 	StoreFood(ctx context.Context, newFood model.Food) error
 }

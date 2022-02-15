@@ -10,7 +10,7 @@ import (
 )
 
 type fd struct {
-	db repository.DB
+	db     repository.DB
 	logger logger.Logger
 }
 
@@ -22,8 +22,8 @@ func (food *fd) RandomFood(ctx context.Context) (model.Food, error) {
 	return food.db.GetRandomFood(ctx)
 }
 
-func (food *fd) GetFoods(ctx context.Context) ([]model.Food, error) {
-	return food.db.GetFoods(ctx)
+func (food *fd) GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error) {
+	return food.db.GetFoods(ctx, paginationLimit)
 }
 
 func (food *fd) StoreFood(ctx context.Context, newFood model.Food) error {

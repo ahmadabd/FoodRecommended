@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/enum"
@@ -75,9 +76,14 @@ func (handler *handler) foodsHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
+		paginationLimit, perr := strconv.ParseInt(r.URL.Query().Get("paginationLimit"), 10, 64)
+		if perr != nil || paginationLimit == 0 {
+			paginationLimit = 10
+		}
+
 		var foods []model.Food
 		var err error
-		foods, err = handler.food.GetFoods(ctx)
+		foods, err = handler.food.GetFoods(ctx, int(paginationLimit))
 		if err != nil {
 			handler.logger.Error(fmt.Sprintf("error happen in getting all food: %v", err))
 			w.WriteHeader(http.StatusInternalServerError)

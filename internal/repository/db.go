@@ -9,5 +9,5 @@ import (
 type DB interface {
 	CreateFood(ctx context.Context, food model.Food) error
 	GetRandomFood(ctx context.Context) (model.Food, error)
-	GetFoods(ctx context.Context) ([]model.Food, error)
+	GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error)
 }
