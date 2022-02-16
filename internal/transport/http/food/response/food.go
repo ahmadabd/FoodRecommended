@@ -8,4 +8,9 @@ type (
 		Country    string `json:"country"`
 		Vegetarian string `json:"vegetarian"`
 	}
+
+	Error struct {
+		Status int    `json:"status"`
+		Message string `json:"message"`
+	}
 )

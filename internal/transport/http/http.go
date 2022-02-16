@@ -1,4 +1,4 @@
-package myHttp
+package http
 
 import "github.com/ahmadabd/FoodRecommended.git/internal/configs"
 

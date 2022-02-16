@@ -1,3 +1,6 @@
 {"level":"ERROR","ts":"2022-02-15T09:03:33.325+0330","msg":"Ignored key without a value.","ignored":null}
 {"level":"ERROR","ts":"2022-02-15T09:03:33.325+0330","msg":"Error while connecting to database"}
 {"level":"ERROR","ts":"2022-02-15T09:05:59.383+0330","msg":"Error while connecting to database: <nil>"}
+{"level":"ERROR","ts":"2022-02-16T10:35:42.604+0330","msg":"error happen in getting random food: context canceled"}
+{"level":"ERROR","ts":"2022-02-16T10:36:15.465+0330","msg":"error happen in getting random food: context canceled"}
+{"level":"ERROR","ts":"2022-02-16T10:37:03.251+0330","msg":"error happen in getting random food: context canceled"}

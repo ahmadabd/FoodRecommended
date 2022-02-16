@@ -11,7 +11,7 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger/zap"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
-	"github.com/ahmadabd/FoodRecommended.git/internal/transport/myHttp/food/handler"
+	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/handler"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap/zapcore"
 )

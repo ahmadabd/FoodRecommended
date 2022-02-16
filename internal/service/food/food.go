@@ -15,7 +15,7 @@ type fd struct {
 }
 
 func New(db repository.DB, logger logger.Logger) service.Food {
-	return &fd{db: db, logger: logger}
+	return &fd{db, logger}
 }
 
 func (food *fd) RandomFood(ctx context.Context) (model.Food, error) {
