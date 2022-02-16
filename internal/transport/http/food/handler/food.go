@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
@@ -36,19 +35,7 @@ func (handler *handler) randomFoodHandler(c echo.Context) error {
 		})
 	}
 
-	res := new(response.Food)
-	if err = c.Bind(res); err != nil {
-		handler.logger.Error(err.Error())
-
-		c.JSON(http.StatusInternalServerError, response.Error{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
-	}
-
-	res = castFoodToResponse(food)
-
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, castFoodToResponse(food))
 }
 
 func (handler *handler) addFoodHandler(c echo.Context) error {
@@ -65,8 +52,6 @@ func (handler *handler) addFoodHandler(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
-
-	json.NewDecoder(c.Request().Body).Decode(newFood)
 
 	food := castRequestToFood(*newFood)
 
@@ -105,15 +90,6 @@ func (handler *handler) allFoodsHandler(c echo.Context) error {
 	}
 
 	res := new([]response.Food)
-
-	if err := c.Bind(res); err != nil {
-		handler.logger.Error(err.Error())
-
-		c.JSON(http.StatusInternalServerError, response.Error{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
-	}
 
 	if err == nil {
 		for _, food := range foods {
