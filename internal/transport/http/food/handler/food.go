@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -29,32 +28,53 @@ func (handler *handler) randomFoodHandler(c echo.Context) error {
 	food, err := handler.food.RandomFood(ctx)
 
 	if err != nil {
-		handler.logger.Error(fmt.Sprintf("error happen in getting random food: %v", err))
+		handler.logger.Error(err.Error())
 
 		c.JSON(http.StatusInternalServerError, response.Error{
-			Status:  http.StatusBadRequest,
-			Message: "internal server error",
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, castFoodToResponse(food))
+	res := new(response.Food)
+	if err = c.Bind(res); err != nil {
+		handler.logger.Error(err.Error())
+
+		c.JSON(http.StatusInternalServerError, response.Error{
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+
+	res = castFoodToResponse(food)
+
+	return c.JSON(http.StatusOK, res)
 }
 
-func (handler *handler) foodHandler(c echo.Context) error {
+func (handler *handler) addFoodHandler(c echo.Context) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	newFood := new(request.Food)
 
+	if err := c.Bind(newFood); err != nil {
+		handler.logger.Error(err.Error())
+
+		c.JSON(http.StatusInternalServerError, response.Error{
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+
 	json.NewDecoder(c.Request().Body).Decode(newFood)
 
 	food := castRequestToFood(*newFood)
 
-	if err := handler.food.StoreFood(ctx, food); err != nil {
-		handler.logger.Error(fmt.Sprintf("error happen in storing new food: %v", err))
+	if err := handler.food.StoreFood(ctx, *food); err != nil {
+		handler.logger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, response.Error{
 			Status:  http.StatusInternalServerError,
-			Message: fmt.Sprintf("error happen in storing new food: %v", err),
+			Message: err.Error(),
 		})
 	}
 
@@ -64,7 +84,7 @@ func (handler *handler) foodHandler(c echo.Context) error {
 	})
 }
 
-func (handler *handler) foodsHandler(c echo.Context) error {
+func (handler *handler) allFoodsHandler(c echo.Context) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -77,26 +97,35 @@ func (handler *handler) foodsHandler(c echo.Context) error {
 	var err error
 	foods, err = handler.food.GetFoods(ctx, int(paginationLimit))
 	if err != nil {
-		handler.logger.Error(fmt.Sprintf("error happen in getting all food: %v", err))
+		handler.logger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, response.Error{
 			Status:  http.StatusInternalServerError,
-			Message: fmt.Sprintf("error happen in getting all food: %v", err),
+			Message: err.Error(),
 		})
 	}
 
 	res := new([]response.Food)
 
+	if err := c.Bind(res); err != nil {
+		handler.logger.Error(err.Error())
+
+		c.JSON(http.StatusInternalServerError, response.Error{
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+
 	if err == nil {
 		for _, food := range foods {
 			tmp := castFoodToResponse(food)
-			*res = append(*res, tmp)
+			*res = append(*res, *tmp)
 		}
 	}
 
 	return c.JSON(http.StatusOK, res)
 }
 
-func castFoodToResponse(food model.Food) response.Food {
+func castFoodToResponse(food model.Food) *response.Food {
 	var tmp response.Food
 	tmp.Id = food.Id
 	tmp.Name = food.Name
@@ -108,10 +137,10 @@ func castFoodToResponse(food model.Food) response.Food {
 	}
 	tmp.Vegetarian = "non-vegetarian"
 
-	return tmp
+	return &tmp
 }
 
-func castRequestToFood(food request.Food) model.Food {
+func castRequestToFood(food request.Food) *model.Food {
 	var newFood model.Food
 
 	newFood.Name = food.Name
@@ -123,5 +152,5 @@ func castRequestToFood(food request.Food) model.Food {
 		newFood.Vegetarian = enum.NonVegetarian
 	}
 
-	return newFood
+	return &newFood
 }
