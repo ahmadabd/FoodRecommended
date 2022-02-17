@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
@@ -31,6 +33,13 @@ func (r *rest) Start(cfg configs.ConfigImp) error {
 	r.routing("api")
 
 	return r.echo.Start(serverConfigs(cfg))
+}
+
+func (r *rest) Shutdown() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	return r.echo.Shutdown(ctx)
 }
 
 func serverConfigs(cfg configs.ConfigImp) string {

@@ -1,10 +1,8 @@
 package handler
 
 import (
-	"context"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/enum"
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
@@ -21,10 +19,8 @@ type handler struct {
 }
 
 func (handler *handler) randomFoodHandler(c echo.Context) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
 
-	food, err := handler.food.RandomFood(ctx)
+	food, err := handler.food.RandomFood(c.Request().Context())
 
 	if err != nil {
 		handler.logger.Error(err.Error())
@@ -39,23 +35,21 @@ func (handler *handler) randomFoodHandler(c echo.Context) error {
 }
 
 func (handler *handler) addFoodHandler(c echo.Context) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
 
 	newFood := new(request.Food)
 
 	if err := c.Bind(newFood); err != nil {
 		handler.logger.Error(err.Error())
 
-		c.JSON(http.StatusInternalServerError, response.Error{
-			Status:  http.StatusInternalServerError,
+		c.JSON(http.StatusBadRequest, response.Error{
+			Status:  http.StatusBadRequest,
 			Message: err.Error(),
 		})
 	}
 
 	food := castRequestToFood(*newFood)
 
-	if err := handler.food.StoreFood(ctx, *food); err != nil {
+	if err := handler.food.StoreFood(c.Request().Context(), *food); err != nil {
 		handler.logger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, response.Error{
 			Status:  http.StatusInternalServerError,
@@ -70,8 +64,6 @@ func (handler *handler) addFoodHandler(c echo.Context) error {
 }
 
 func (handler *handler) allFoodsHandler(c echo.Context) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
 
 	paginationLimit, perr := strconv.ParseInt(c.QueryParam("paginationLimit"), 10, 64)
 	if perr != nil || paginationLimit == 0 {
@@ -80,7 +72,7 @@ func (handler *handler) allFoodsHandler(c echo.Context) error {
 
 	var foods []model.Food
 	var err error
-	foods, err = handler.food.GetFoods(ctx, int(paginationLimit))
+	foods, err = handler.food.GetFoods(c.Request().Context(), int(paginationLimit))
 	if err != nil {
 		handler.logger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, response.Error{
