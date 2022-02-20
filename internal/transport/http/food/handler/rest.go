@@ -7,6 +7,7 @@ import (
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/validation"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http"
 	"github.com/labstack/echo/v4"
@@ -28,7 +29,8 @@ func New(foodSrv service.Food, logger logger.Logger) http.Rest {
 	}
 }
 
-func (r *rest) Start(cfg configs.ConfigImp) error {
+func (r *rest) Start(cfg configs.ConfigImp, validator validation.Validator) error {
+	r.echo.Validator = validator
 	r.echo.Use(middleware.Recover())
 	r.routing("api")
 

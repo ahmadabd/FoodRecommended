@@ -9,6 +9,7 @@ import (
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs/yaml"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger/zap"
+	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/validation/playground"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/handler"
@@ -43,8 +44,10 @@ func serve(c *cli.Context) error {
 
 	foodServ := food.New(dbConn, logger)
 
+	validator := playground.New()
+
 	go func() {
-		if err := handler.New(foodServ, logger).Start(cfg); err != nil {
+		if err := handler.New(foodServ, logger).Start(cfg, validator); err != nil {
 			logger.Error(fmt.Sprintf("error happen while serving: %v", err))
 		}
 	}()

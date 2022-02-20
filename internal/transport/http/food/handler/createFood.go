@@ -23,6 +23,10 @@ func (handler *handler) createFoodHandler() echo.HandlerFunc {
 			})
 		}
 
+		if err := c.Validate(newFood); err != nil {
+			return err
+		}
+
 		food := castRequestToFood(*newFood)
 
 		if err := handler.food.StoreFood(c.Request().Context(), *food); err != nil {

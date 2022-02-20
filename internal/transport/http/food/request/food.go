@@ -2,9 +2,9 @@ package request
 
 type (
 	Food struct {
-		Name       string `json:"name"`
-		City       string `json:"city"`
-		Country    string `json:"country"`
-		Vegetarian string `json:"vegetarian"`
+		Name       string `json:"name" validate:"required"`
+		City       string `json:"city" validate:"required"`
+		Country    string `json:"country" validate:"required"`
+		Vegetarian string `json:"vegetarian" validate:"required"`
 	}
 )
