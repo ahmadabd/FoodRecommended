@@ -25,7 +25,11 @@ var ServeCMD = &cli.Command{
 }
 
 func serve(c *cli.Context) error {
-	cfg := yaml.GetConfig()
+	cfg, err := yaml.GetConfig("config.yml")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

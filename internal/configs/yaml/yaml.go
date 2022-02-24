@@ -1,8 +1,10 @@
 package yaml
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 	"gopkg.in/yaml.v2"
@@ -28,9 +30,21 @@ type (
 	}
 )
 
-func GetConfig() configs.ConfigImp {
+var ErrUnknownFileExtension = errors.New("unknown file extension")
+
+func GetConfig(path string) (configs.ConfigImp, error) {
+
+	switch filepath.Ext(path) {
+	case ".yaml", ".yml":
+		return ParsYaml(path), nil
+	default:
+		return nil, ErrUnknownFileExtension
+	}
+}
+
+func ParsYaml(path string) configs.ConfigImp {
 	c := &Config{}
-	yamlFile, err := ioutil.ReadFile("config.yml")
+	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Println("Error in reading config file")
 	}
