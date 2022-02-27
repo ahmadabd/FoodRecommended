@@ -4,3 +4,4 @@
 {"level":"ERROR","ts":"2022-02-16T10:35:42.604+0330","msg":"error happen in getting random food: context canceled"}
 {"level":"ERROR","ts":"2022-02-16T10:36:15.465+0330","msg":"error happen in getting random food: context canceled"}
 {"level":"ERROR","ts":"2022-02-16T10:37:03.251+0330","msg":"error happen in getting random food: context canceled"}
+{"level":"ERROR","ts":"2022-02-26T12:19:44.846+0330","msg":"error happen while serving: listen tcp 127.0.0.1:5000: bind: address already in use"}
