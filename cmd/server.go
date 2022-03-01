@@ -46,7 +46,7 @@ func serve(c *cli.Context) error {
 
 	fmt.Println("Application started.")
 
-	foodServ := food.New(dbConn, logger)
+	foodServ := food.New(dbConn)
 
 	validator := playground.New()
 
