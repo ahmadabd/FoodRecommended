@@ -6,10 +6,10 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
 )
 
-func (db *mysql) GetRandomFood(ctx context.Context) (model.Food, error) {
+func (db *Mysql) GetRandomFood(ctx context.Context) (model.Food, error) {
 	var food model.Food
 
-	result := db.db.QueryRowContext(ctx, `SELECT 
+	result := db.Db.QueryRowContext(ctx, `SELECT 
 		id, 
 		name, 
 		city, 
@@ -24,8 +24,8 @@ func (db *mysql) GetRandomFood(ctx context.Context) (model.Food, error) {
 	return food, nil
 }
 
-func (db *mysql) CreateFood(ctx context.Context, food model.Food) error {
-	_, err := db.db.ExecContext(ctx,
+func (db *Mysql) CreateFood(ctx context.Context, food model.Food) error {
+	_, err := db.Db.ExecContext(ctx,
 		`INSERT INTO foods (name, city, country, vegetarian) VALUES (?, ?, ?, ?)`,
 		food.Name,
 		food.City,
@@ -36,10 +36,10 @@ func (db *mysql) CreateFood(ctx context.Context, food model.Food) error {
 	return err
 }
 
-func (db *mysql) GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error) {
+func (db *Mysql) GetFoods(ctx context.Context, paginationLimit int) ([]model.Food, error) {
 	var foods []model.Food
 
-	rows, err := db.db.QueryContext(ctx, `SELECT 
+	rows, err := db.Db.QueryContext(ctx, `SELECT 
 		id, 
 		name, 
 		city, 

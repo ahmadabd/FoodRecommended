@@ -9,9 +9,9 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
 )
 
-type mysql struct {
-	db     *sql.DB
-	logger logger.Logger
+type Mysql struct {
+	Db     *sql.DB
+	Logger logger.Logger
 }
 
 func SetupDatabase(cfg configs.ConfigImp, logger logger.Logger) (repository.DB, error) {
@@ -26,7 +26,7 @@ func SetupDatabase(cfg configs.ConfigImp, logger logger.Logger) (repository.DB, 
 		return nil, err
 	}
 
-	return &mysql{db: db, logger: logger}, nil
+	return &Mysql{Db: db, Logger: logger}, nil
 }
 
 func databaseConfig(cfg configs.ConfigImp) string {

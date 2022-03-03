@@ -12,8 +12,6 @@ import (
 )
 
 // func TestStoreFood(t *testing.T) {
-// 	ctx, cancel := context.WithTimeout(context.Background(), 10)
-// 	defer cancel()
 
 // 	service := food.New(mock.New())
 
@@ -25,7 +23,7 @@ import (
 // 		Vegetarian: enum.Vegetarian,
 // 	}
 
-// 	err := service.StoreFood(ctx, food)
+// 	err := service.StoreFood(context.TODO(), food)
 
 // 	if err != nil {
 // 		t.Error("Expected no error, got ", err)
@@ -33,12 +31,10 @@ import (
 // }
 
 // func TestGetFoods(t *testing.T) {
-// 	ctx, cancel := context.WithTimeout(context.Background(), 10)
-// 	defer cancel()
 
 // 	service := food.New(mock.New())
 
-// 	_, err := service.GetFoods(ctx)
+// 	_, err := service.GetFoods(context.TODO())
 
 // 	if err != nil {
 // 		t.Error("Expected no error, got ", err)
@@ -46,11 +42,10 @@ import (
 // }
 
 // func TestRandomFood(t *testing.T) {
-// 	ctx, cancel := context.WithTimeout(context.Background(), 10)
-// 	defer cancel()
+
 // 	service := food.New(mock.New())
 
-// 	_, err := service.RandomFood(ctx)
+// 	_, err := service.RandomFood(context.TODO())
 
 // 	if err != nil {
 // 		t.Error("Expected nil, got error")
@@ -58,9 +53,6 @@ import (
 // }
 
 func TestStoreFood(t *testing.T) {
-	
-	ctx, cancel := context.WithTimeout(context.Background(), 10)
-	defer cancel()
 
 	mockctl := gomock.NewController(t)
 	defer mockctl.Finish()
@@ -76,9 +68,9 @@ func TestStoreFood(t *testing.T) {
 		Vegetarian: enum.Vegetarian,
 	}
 
-	mockDB.EXPECT().CreateFood(ctx, food).Return(nil).Times(1)
+	mockDB.EXPECT().CreateFood(gomock.Any(), food).Return(nil).Times(1)
 
-	err := service.StoreFood(ctx, food)
+	err := service.StoreFood(context.TODO(), food)
 
 	if err != nil {
 		t.Error("Expected no error, got ", err)
@@ -87,14 +79,11 @@ func TestStoreFood(t *testing.T) {
 
 func TestGetFoods(t *testing.T) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10)
-	defer cancel()
-
 	mockctl := gomock.NewController(t)
 	defer mockctl.Finish()
 	mockDB := mocks.NewMockDB(mockctl)
 
-	mockDB.EXPECT().GetFoods(ctx, 10).Return([]model.Food{
+	mockDB.EXPECT().GetFoods(gomock.Any(), 10).Return([]model.Food{
 		{
 			Id:         1,
 			Name:       "Mock Food1",
@@ -114,7 +103,7 @@ func TestGetFoods(t *testing.T) {
 
 	service := food.New(mockDB)
 
-	_, err := service.GetFoods(ctx, 10)
+	_, err := service.GetFoods(context.TODO(), 10)
 
 	if err != nil {
 		t.Error("Expected no error, got ", err)
@@ -123,14 +112,11 @@ func TestGetFoods(t *testing.T) {
 
 func TestRandomFood(t *testing.T) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10)
-	defer cancel()
-
 	mockctl := gomock.NewController(t)
 	defer mockctl.Finish()
 	mockDB := mocks.NewMockDB(mockctl)
 
-	mockDB.EXPECT().GetRandomFood(ctx).Return(model.Food{
+	mockDB.EXPECT().GetRandomFood(gomock.Any()).Return(model.Food{
 		Id:         1,
 		Name:       "Mock Food",
 		City:       "Mock City",
@@ -141,7 +127,7 @@ func TestRandomFood(t *testing.T) {
 
 	service := food.New(mockDB)
 
-	_, err := service.RandomFood(ctx)
+	_, err := service.RandomFood(context.TODO())
 
 	if err != nil {
 		t.Error("Expected nil, got error")
