@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetServerHost(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
@@ -17,7 +17,7 @@ func TestGetServerHost(t *testing.T) {
 }
 
 func TestGetDatabaseHost(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
@@ -27,7 +27,7 @@ func TestGetDatabaseHost(t *testing.T) {
 }
 
 func TestGetServerPort(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
@@ -37,7 +37,7 @@ func TestGetServerPort(t *testing.T) {
 }
 
 func TestGetDatabasePort(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
@@ -47,17 +47,17 @@ func TestGetDatabasePort(t *testing.T) {
 }
 
 func TestGetDatabaseName(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
-	if cfg.GetDatabaseName() != "food" {
+	if cfg.GetDatabaseName() != "FoodRecommendationTest" {
 		t.Errorf("got, want %s", cfg.GetDatabaseName())
 	}
 }
 
 func TestGetDatabaseUser(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
@@ -67,11 +67,11 @@ func TestGetDatabaseUser(t *testing.T) {
 }
 
 func TestGetDatabasePassword(t *testing.T) {
-	path := "testdata/config.yml"
+	path := "testdata/test.yml"
 
 	cfg, _ := GetConfig(path)
 
-	if cfg.GetDatabasePassword() != "toor" {
+	if cfg.GetDatabasePassword() != "1234" {
 		t.Errorf("got, want %s", cfg.GetDatabasePassword())
 	}
 }
@@ -84,19 +84,19 @@ func TestGetConfig(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name:     "parse config.yml",
+			name:     "parse test.yml",
 			path:     "testdata/config.yml",
 			expected: &Config{},
 			wantErr:  false,
 		},
 		{
-			name:     "parse config.yaml",
+			name:     "parse test.yaml",
 			path:     "testdata/config.yaml",
 			expected: &Config{},
 			wantErr:  false,
 		},
 		{
-			name:     "parse config.cfg",
+			name:     "parse test.cfg",
 			path:     "testdata/config.cfg",
 			expected: &Config{},
 			wantErr:  true,

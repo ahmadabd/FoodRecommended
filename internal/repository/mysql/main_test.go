@@ -19,7 +19,7 @@ func TestMain(m *testing.M) {
 
 func setup(t *testing.T) (repository.DB, func()) {
 	// DB Connection
-	db, err := sql.Open("mysql", "root:a142332144113@tcp(localhost:3306)/food_recommended_test")
+	db, err := sql.Open("mysql", "root:Ahmad@13741112@tcp(localhost:3306)/food_recommended_test")
 	assert.Nil(t, err)
 
 	// Migrations
