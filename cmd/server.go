@@ -10,7 +10,9 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs/yaml"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger/zap"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/validation/playground"
-	"github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
+	"github.com/ahmadabd/FoodRecommended.git/internal/repository/gorm"
+
+	// "github.com/ahmadabd/FoodRecommended.git/internal/repository/mysql"
 	"github.com/ahmadabd/FoodRecommended.git/internal/service/food"
 	"github.com/ahmadabd/FoodRecommended.git/internal/transport/http/food/handler"
 	"github.com/urfave/cli/v2"
@@ -38,7 +40,8 @@ func serve(c *cli.Context) error {
 
 	logger := zap.New(f, zapcore.ErrorLevel)
 
-	dbConn, err := mysql.SetupDatabase(cfg, logger)
+	// dbConn, err := mysql.SetupDatabase(cfg, logger)
+	dbConn, err := gorm.SetupDatabase(cfg, logger)
 	if err != nil {
 		log.Println("Error connecting to database: ", err)
 		return err
