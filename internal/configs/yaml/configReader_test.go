@@ -6,16 +6,6 @@ import (
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
 )
 
-func TestGetServerHost(t *testing.T) {
-	path := "testdata/test.yml"
-
-	cfg, _ := GetConfig(path)
-
-	if cfg.GetServerHost() != "localhost" {
-		t.Errorf("got, want %s", cfg.GetServerHost())
-	}
-}
-
 func TestGetDatabaseHost(t *testing.T) {
 	path := "testdata/test.yml"
 

@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    # volumes:
+    #   - .:/app
+    restart: on-failure
+    depends_on:
+      - database
+    container_name: web
+    networks:
+      - default
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_PORT=3306
+      - MYSQL_USER=food
+      - MYSQL_PASSWORD=Ahmad@13741112
+      - MYSQL_DATABASE=FoodRecommendation
+  
+  database:
+    container_name: database
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "33061:3306"
+    volumes:
+      - golang-docker-data:/var/lib/mysql
+    networks:
+      - default
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=food
+      - MYSQL_DATABASE=FoodRecommendation
+      - MYSQL_PASSWORD=Ahmad@13741112
+  
+volumes:
+  golang-docker-data:
+
+networks:
+  default:

@@ -1,10 +1,5 @@
 package yaml
 
-
-func (c *Config) GetServerHost() string {
-	return c.Server.Host
-}
-
 func (c *Config) GetDatabaseHost() string {
 	return c.Database.Host
 }

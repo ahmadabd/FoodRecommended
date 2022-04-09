@@ -45,5 +45,5 @@ func (r *rest) Shutdown() error {
 }
 
 func serverConfigs(cfg configs.ConfigImp) string {
-	return fmt.Sprintf("%v:%v", cfg.GetServerHost(), cfg.GetServerPort())
+	return fmt.Sprintf(":%v", cfg.GetServerPort())
 }
