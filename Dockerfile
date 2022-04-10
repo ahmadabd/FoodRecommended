@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:1.18
 
 ENV PORT 5000
 
@@ -14,4 +14,4 @@ RUN go build -o /food
 EXPOSE $PORT
 
 # CMD [ "/food", "serve" ]
-ENTRYPOINT [ "bash", "./entrypoint.sh", "/food", "serve", "docker-config-template.yml" ]
+ENTRYPOINT [ "bash", "./devops/entrypoint.sh", "/food", "serve", "docker-config-template.yml" ]

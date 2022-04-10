@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web:
     build: 
-      context: .
+      context: ..
       dockerfile: ./Dockerfile
     ports:
       - "5000:5000"
@@ -12,7 +12,7 @@ services:
     restart: on-failure
     depends_on:
       - database
-    container_name: web
+    container_name: foodrecommnedation
     networks:
       - default
     environment:
@@ -23,7 +23,7 @@ services:
       - MYSQL_DATABASE=FoodRecommendation
   
   database:
-    container_name: database
+    container_name: fooddb
     image: mysql:8.0
     restart: always
     ports:
