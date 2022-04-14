@@ -8,13 +8,16 @@ services:
     ports:
       - "5000:5000"
     # volumes:
-    #   - .:/app
+    #   - ../cmd:/app/cmd
+    #   - ../internal:/app/internal
+    #   - ../logs:/app/logs
+    #   - ../mocks:/app/mocks
     restart: on-failure
     depends_on:
       - database
     container_name: foodrecommnedation
     networks:
-      - default
+      - foodnt
     environment:
       - MYSQL_HOST=database
       - MYSQL_PORT=3306
@@ -31,7 +34,7 @@ services:
     volumes:
       - golang-docker-data:/var/lib/mysql
     networks:
-      - default
+      - foodnt
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=food
@@ -42,4 +45,4 @@ volumes:
   golang-docker-data:
 
 networks:
-  default:
+  foodnt:

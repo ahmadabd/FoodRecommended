@@ -5,4 +5,4 @@ Its an application with go-lang that recommend u food in random
 >> go run main.go serve 
 
 ## Next Steps
-1. Add cmd using cli packge
+1. Add auto_migrate to database

@@ -1,6 +1,10 @@
 FROM golang:1.18
 
 ENV PORT 5000
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -r --gid $GID user && useradd -r --uid $UID -g user user
 
 WORKDIR /app
 
