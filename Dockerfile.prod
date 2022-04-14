@@ -18,4 +18,4 @@ RUN go build -o /food
 
 EXPOSE $PORT
 
-ENTRYPOINT [ "bash", "./devops/entrypointProd.sh", "/food", "serve", "docker-config-template.yml" ]
+CMD [ "bash", "./devops/entrypointProd.sh", "/food", "serve", "docker-config-template.yml" ]

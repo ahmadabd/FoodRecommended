@@ -14,11 +14,11 @@ ADD . /app
 RUN go mod tidy
 RUN go mod verify
 
-# install ait for hot-reload
+# install air for hot-reload
 # RUN go get -u github.com/cosmtrek/air
 RUN curl -fLo install.sh https://raw.githubusercontent.com/cosmtrek/air/master/install.sh \
     && chmod +x install.sh && sh install.sh && cp ./bin/air /bin/air
 
 EXPOSE $PORT
 
-ENTRYPOINT [ "bash", "./devops/entrypointDev.sh", "docker-config-template.yml" ]
+CMD [ "bash", "./devops/entrypointDev.sh", "docker-config-template.yml" ]
