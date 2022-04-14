@@ -1,0 +1,22 @@
+services:
+  web:
+    build: 
+      context: ..
+      dockerfile: ./Dockerfile.prod
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../cmd:/app/cmd
+      - ../internal:/app/internal
+    restart: on-failure
+    depends_on:
+      - database
+    container_name: foodrecommnedation
+    networks:
+      - foodnt
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_PORT=3306
+      - MYSQL_USER=food
+      - MYSQL_PASSWORD=Ahmad@13741112
+      - MYSQL_DATABASE=FoodRecommendation

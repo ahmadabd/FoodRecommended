@@ -1,0 +1,24 @@
+FROM golang:1.18
+
+ENV GO111MODULE=on
+ENV PORT 5000
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -r --gid $GID user && useradd -r --uid $UID -g user user
+
+WORKDIR /app
+
+ADD . /app
+
+RUN go mod tidy
+RUN go mod verify
+
+# install ait for hot-reload
+# RUN go get -u github.com/cosmtrek/air
+RUN curl -fLo install.sh https://raw.githubusercontent.com/cosmtrek/air/master/install.sh \
+    && chmod +x install.sh && sh install.sh && cp ./bin/air /bin/air
+
+EXPOSE $PORT
+
+ENTRYPOINT [ "bash", "./devops/entrypointDev.sh", "docker-config-template.yml" ]
