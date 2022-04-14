@@ -5,9 +5,6 @@ services:
       dockerfile: ./Dockerfile.prod
     ports:
       - "5000:5000"
-    volumes:
-      - ../cmd:/app/cmd
-      - ../internal:/app/internal
     restart: on-failure
     depends_on:
       - database
