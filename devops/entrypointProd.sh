@@ -15,6 +15,6 @@ do
     sed -i "s|\$$var|${!var}|g" $CONFIG_FILE
 done
 
-cp $CONFIG_FILE config.yml
+cp $CONFIG_FILE /app/config.yml
 
 $EXECUTABLE $APP

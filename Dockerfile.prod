@@ -1,21 +1,29 @@
-FROM golang:1.18
+FROM golang:1.18 as builder
 
 ENV GO111MODULE=on
-ENV PORT 5000
-ARG UID=1000
-ARG GID=1000
-
-RUN groupadd -r --gid $GID user && useradd -r --uid $UID -g user user
 
 WORKDIR /app
 
-ADD . /app
+ADD . ./
 
 RUN go mod tidy
 RUN go mod verify
 
-RUN go build -o /food
+RUN CGO_ENABLED=0 GOOS=linux go build -o food
+
+FROM alpine:3.14
+
+# install bash
+RUN apk update && apk add bash
+# For Alpine:3.3+
+# RUN apk add --no-cache bash
+
+ENV PORT 5000
+
+WORKDIR /app
+
+COPY --from=builder /app /app
 
 EXPOSE $PORT
 
-CMD [ "bash", "./devops/entrypointProd.sh", "/food", "serve", "docker-config-template.yml" ]
+CMD [ "bash", "./devops/entrypointProd.sh", "/app/food", "serve", "docker-config-template.yml" ]
