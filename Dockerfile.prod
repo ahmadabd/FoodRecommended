@@ -22,8 +22,10 @@ ENV PORT 5000
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+COPY --from=builder /app/food /app
+COPY --from=builder /app/devops/entrypointProd.sh /app
+COPY --from=builder /app/docker-config-template.yml /app
 
 EXPOSE $PORT
 
-CMD [ "bash", "./devops/entrypointProd.sh", "/app/food", "serve", "docker-config-template.yml" ]
+CMD [ "bash", "./entrypointProd.sh", "./food", "serve", "docker-config-template.yml" ]

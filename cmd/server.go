@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs/yaml"
@@ -33,7 +34,8 @@ func serve(c *cli.Context) error {
 		log.Fatal(err)
 	}
 
-	f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := makeLogFile()
+
 	if err != nil {
 		return err
 	}
@@ -65,4 +67,43 @@ func serve(c *cli.Context) error {
 	fmt.Println("\nReceived an interrupt, closing connections...")
 
 	return nil
+}
+
+func makeLogFile() (*os.File, error) {
+
+	if os.Getenv("CONTAINER") == "1" {
+		// find path
+		exPath, err := os.Executable()
+		exPath = filepath.Dir(exPath)
+
+		if err != nil {
+			return nil, err
+		}
+
+		// make logs directory
+		os.Mkdir(filepath.Join(exPath, "logs"), 0755)
+		os.Create(filepath.Join(exPath, "logs", "app.log"))
+
+		if err != nil {
+			return nil, err
+		}
+
+		// make app.log file in /logs
+		f, err := os.OpenFile(filepath.Join(exPath, "logs", "app.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			return nil, err
+		}
+
+		return f, nil
+	} else {
+		log.Println("CONTAINER env variable not defined.", os.Getenv("CONTAINER"))
+		
+		// make app.log file in /logs
+		f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			return nil, err
+		}
+
+		return f, nil
+	}
 }
