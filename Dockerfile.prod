@@ -4,10 +4,13 @@ ENV GO111MODULE=on
 
 WORKDIR /app
 
-ADD . ./
+COPY go.??? ./
 
-RUN go mod tidy
-RUN go mod verify
+# RUN go mod tidy
+# RUN go mod verify
+RUN go mod download
+
+ADD . ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o food
 
