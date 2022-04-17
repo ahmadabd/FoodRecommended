@@ -80,12 +80,11 @@ func makeLogFile() (*os.File, error) {
 			return nil, err
 		}
 
-		// make logs directory
-		os.Mkdir(filepath.Join(exPath, "logs"), 0755)
-		os.Create(filepath.Join(exPath, "logs", "app.log"))
-
-		if err != nil {
-			return nil, err
+		// if file dosent exist
+		if _, err := os.Stat(filepath.Join(exPath, "logs", "app.log")); err != nil {
+			// make logs directory
+			os.Mkdir(filepath.Join(exPath, "logs"), 0755)
+			os.Create(filepath.Join(exPath, "logs", "app.log"))
 		}
 
 		// make app.log file in /logs
@@ -97,7 +96,7 @@ func makeLogFile() (*os.File, error) {
 		return f, nil
 	} else {
 		log.Println("CONTAINER env variable not defined.", os.Getenv("CONTAINER"))
-		
+
 		// make app.log file in /logs
 		f, err := os.OpenFile("logs/app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
