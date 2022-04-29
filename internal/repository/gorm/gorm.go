@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ahmadabd/FoodRecommended.git/internal/configs"
+	"github.com/ahmadabd/FoodRecommended.git/internal/entity/model"
 	"github.com/ahmadabd/FoodRecommended.git/internal/pkg/logger"
 	"github.com/ahmadabd/FoodRecommended.git/internal/repository"
 	"gorm.io/driver/mysql"
@@ -17,12 +18,14 @@ type Gorm struct {
 
 func SetupDatabase(cfg configs.ConfigImp, logger logger.Logger) (repository.DB, error) {
 	db, err := gorm.Open(mysql.Open(databaseConfig(cfg)), &gorm.Config{})
-	
+
+	db.AutoMigrate(&model.Food{})
+
 	if err != nil {
 		logger.Error(fmt.Sprintf("Error while connecting to database: %v", err))
 		return nil, err
 	}
-	
+
 	return &Gorm{Db: db, Logger: logger}, err
 }
 
